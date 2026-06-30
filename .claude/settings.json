@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx -y @angular/cli@latest version)",
+      "Bash(npx -y @angular/cli@19 version)",
+      "Bash(npx -y @angular/cli@19 new videojuegos-front --directory=. --routing --style=css --skip-git --ssr=false --package-manager=npm)",
+      "Bash(npm install *)",
+      "Bash(npx tailwindcss *)",
+      "Bash(npx ng *)",
+      "Bash(npm ls *)",
+      "Bash(echo \"started with PID $!\")",
+      "Bash(cat /tmp/ng-serve.log 2>&1 | tail -n 60)",
+      "Read(//tmp/**)",
+      "Skill(run)",
+      "Skill(run:*)",
+      "Bash(chromium-cli --help)",
+      "Bash(start http://localhost:4200/dashboard)",
+      "Bash('/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe' --headless=new --disable-gpu --no-sandbox '--screenshot=C:\\\\Users\\\\juand\\\\AppData\\\\Local\\\\Temp\\\\screenshots\\\\coleccion.png' --window-size=1440,1000 http://localhost:4200/coleccion)",
+      "Read(//c/Users/juand/AppData/Local/Temp/screenshots//**)",
+      "Bash('/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe' --headless=new --disable-gpu --no-sandbox '--screenshot=C:\\\\Users\\\\juand\\\\AppData\\\\Local\\\\Temp\\\\screenshots\\\\buscar.png' --window-size=1440,1000 http://localhost:4200/buscar)",
+      "Bash('/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe' --headless=new --disable-gpu --no-sandbox '--screenshot=C:\\\\Users\\\\juand\\\\AppData\\\\Local\\\\Temp\\\\screenshots\\\\juego1.png' --window-size=1440,1000 http://localhost:4200/juego/1)",
+      "Bash('/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe' --headless=new --disable-gpu --no-sandbox '--screenshot=C:\\\\Users\\\\juand\\\\AppData\\\\Local\\\\Temp\\\\screenshots\\\\login.png' --window-size=1440,1000 http://localhost:4200/login)",
+      "Bash('/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe' --headless=new --disable-gpu --no-sandbox '--screenshot=C:\\\\Users\\\\juand\\\\AppData\\\\Local\\\\Temp\\\\screenshots\\\\register.png' --window-size=1440,1000 http://localhost:4200/register)",
+      "Bash('/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe' --headless=new --disable-gpu --no-sandbox '--screenshot=C:\\\\Users\\\\juand\\\\AppData\\\\Local\\\\Temp\\\\screenshots\\\\perfil.png' --window-size=1440,1000 http://localhost:4200/perfil/jdoe)",
+      "Read(//c/Users/juand/AppData/Local/Temp/screenshots/**)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"https://placehold.co/400x560/0a0a0f/7c3aed?font=oxanium&text=Elden%20Ring\")",
+      "Bash(curl -sI \"https://placehold.co/400x560/0a0a0f/7c3aed?font=oxanium&text=Elden%20Ring\")",
+      "Bash('/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe' --headless=new --disable-gpu --no-sandbox --run-all-compositor-stages-before-draw --virtual-time-budget=8000 '--screenshot=C:\\\\Users\\\\juand\\\\AppData\\\\Local\\\\Temp\\\\screenshots\\\\dashboard2.png' --window-size=1440,1000 http://localhost:4200/dashboard)",
+      "Bash(awk '{print $1}')"
+    ]
+  }
+}

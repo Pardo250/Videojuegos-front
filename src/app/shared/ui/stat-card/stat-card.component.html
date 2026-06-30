@@ -1,0 +1,14 @@
+<div class="game-card flex items-center gap-4 p-5">
+  <div [class]="'flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white/5 ' + accentClasses[accent()]">
+    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path [attr.d]="icon()" />
+    </svg>
+  </div>
+
+  <div class="min-w-0">
+    <p class="font-display text-2xl font-bold text-white">
+      <span #valueEl>0</span>{{ suffix() }}
+    </p>
+    <p class="truncate text-xs font-semibold uppercase tracking-wide text-slate-400">{{ label() }}</p>
+  </div>
+</div>

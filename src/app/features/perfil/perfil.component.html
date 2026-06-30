@@ -1,0 +1,24 @@
+<section class="game-card flex flex-col items-center gap-4 p-8 text-center sm:flex-row sm:text-left">
+  <div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-neon-violet to-neon-cyan font-display text-2xl font-bold text-white shadow-glow-violet">
+    {{ usuario().charAt(0).toUpperCase() }}
+  </div>
+  <div>
+    <h1 class="font-display text-2xl font-bold text-white">&#64;{{ usuario() }}</h1>
+    <p class="text-sm text-slate-400">Perfil público de colección</p>
+  </div>
+</section>
+
+<section class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+  <app-stat-card label="Juegos" [value]="totalJuegos()" accent="violet" />
+  <app-stat-card label="Horas jugadas" [value]="horasTotales()" suffix="h" accent="cyan" />
+  <app-stat-card label="Completados" [value]="completados()" accent="green" />
+</section>
+
+<section class="mt-10">
+  <h2 class="mb-4 font-display text-xl font-bold text-white">Colección</h2>
+  <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    @for (juego of coleccion; track juego.id) {
+      <app-game-card [juego]="juego" />
+    }
+  </div>
+</section>
