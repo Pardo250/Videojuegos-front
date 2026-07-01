@@ -1,59 +1,88 @@
-# VideojuegosFront
+# GameVault — Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.27.
+Colección personal de videojuegos con estética gamer (dark mode, neón púrpura/cian, glassmorphism). Frontend en Angular que consume el backend [`Videojuegos-back`](../Videojuegos-back) (Spring Boot + PostgreSQL + JWT + RAWG API).
 
-## Development server
+## Stack
 
-To start a local development server, run:
+- **Angular 19** — standalone components, esbuild builder, signals
+- **Tailwind CSS 3** — sistema de diseño gamer (paleta, sombras neón, animaciones)
+- **GSAP** + **Angular Animations** — transiciones y contadores animados
+- **Fuentes**: Orbitron (display) y Oxanium (sans), vía Google Fonts
 
-```bash
-ng serve
-```
+## Requisitos previos
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Node.js 22.22+ / 24.15+ (o 26+)
+- El backend [`Videojuegos-back`](../Videojuegos-back) corriendo en `http://localhost:8080` (incluye PostgreSQL vía `docker-compose.yml` y su propio README con instrucciones de arranque)
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Puesta en marcha
 
 ```bash
-ng generate --help
+npm install
+npm start        # equivalente a `ng serve` — sirve en http://localhost:4200
 ```
 
-## Building
+Con el backend levantado en paralelo, el login, registro y las llamadas al API funcionan de extremo a extremo. Sin el backend, la app sigue siendo navegable pero usa datos mock (`shared/data/mock-juegos.ts`) en las pantallas que aún no están conectadas al API real.
 
-To build the project run:
+La URL del backend se configura en [`src/environments/environment.ts`](src/environments/environment.ts).
 
-```bash
-ng build
+## Scripts
+
+| Comando         | Descripción                                              |
+|-----------------|-----------------------------------------------------------|
+| `npm start`     | Levanta el servidor de desarrollo (`ng serve`)             |
+| `npm run build` | Build de producción en `dist/`                             |
+| `npm run watch` | Build en modo watch (configuración development)            |
+| `npm test`      | Tests unitarios con Karma/Jasmine                           |
+
+## Pantallas
+
+| Ruta                | Protegida | Descripción                                   |
+|----------------------|:---------:|------------------------------------------------|
+| `/login`             | No        | Inicio de sesión (por usuario, no correo)      |
+| `/register`          | No        | Registro de cuenta nueva                        |
+| `/dashboard`         | Sí        | Estadísticas generales y juegos recientes       |
+| `/buscar`            | Sí        | Búsqueda de juegos vía RAWG                     |
+| `/coleccion`         | Sí        | Biblioteca personal filtrable y ordenable       |
+| `/juego/:id`         | Sí        | Detalle de un juego, rating y reseña            |
+| `/perfil/:usuario`   | No        | Perfil público compartible de la colección      |
+
+Las rutas protegidas usan `authGuard` y redirigen a `/login` si no hay sesión activa.
+
+## Estructura del proyecto
+
+```
+src/app/
+├── core/                     # infraestructura transversal
+│   ├── guards/                 # authGuard (protege rutas privadas)
+│   ├── interceptors/           # authInterceptor (adjunta JWT a las peticiones)
+│   ├── layout/navbar/          # navbar con estado de sesión
+│   ├── models/                 # DTOs del API (auth)
+│   └── services/                # AuthService
+├── features/                 # una carpeta por pantalla
+│   ├── auth/login/ | register/
+│   ├── dashboard/
+│   ├── buscar/
+│   ├── coleccion/
+│   ├── juego-detalle/
+│   └── perfil/
+└── shared/                   # reutilizable entre features
+    ├── data/                   # datos mock (mientras se conectan más endpoints)
+    ├── models/                  # modelos de dominio (JuegoColeccion, EstadoJuego)
+    └── ui/                       # game-card, stat-card, background-grid
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Autenticación
 
-## Running unit tests
+- El login/registro consumen `POST /api/auth/login` y `POST /api/auth/registro` del backend.
+- El JWT devuelto se guarda en `localStorage` y se adjunta automáticamente como `Authorization: Bearer <token>` en cada petición vía `authInterceptor`.
+- El estado de sesión (`AuthService.isAuthenticated`, `AuthService.username`) es reactivo (signals) y se refleja en el navbar y en las rutas protegidas.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Sistema de diseño
 
-```bash
-ng test
-```
+La paleta y utilidades gamer están centralizadas en [`tailwind.config.js`](tailwind.config.js) (colores `void`/`neon`, sombras `glow-*`, animaciones `pulse-glow`/`border-flow`) y en las clases reutilizables de [`src/styles.css`](src/styles.css) (`.game-card`, `.btn-neon`, `.btn-outline`, `.badge-*`, `.input-gamer`).
 
-## Running end-to-end tests
+## Estado del proyecto
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- ✅ UI completa de las 7 pantallas con estilo gamer y animaciones
+- ✅ Autenticación real conectada al backend (registro, login, logout, rutas protegidas)
+- ⏳ Pendiente: conectar `/buscar`, `/coleccion`, `/dashboard` y `/perfil/:usuario` a los endpoints reales del API (`/api/buscar`, `/api/coleccion`, `/api/estadisticas`, `/api/perfil/{username}`) — actualmente usan datos mock
