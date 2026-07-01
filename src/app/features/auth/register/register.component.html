@@ -7,23 +7,49 @@
       <p class="mt-2 text-sm text-slate-400">Empieza a registrar tu colección de juegos</p>
     </div>
 
-    <form class="space-y-4">
+    @if (errorMessage()) {
+      <p class="mb-4 rounded-md border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-300">
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <form class="space-y-4" (submit)="$event.preventDefault(); onSubmit()">
       <div>
         <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-400">Nombre de usuario</label>
-        <input type="text" placeholder="tu_usuario" class="input-gamer w-full" />
+        <input
+          type="text"
+          placeholder="tu_usuario"
+          class="input-gamer w-full"
+          [value]="username()"
+          (input)="username.set($any($event.target).value)"
+        />
       </div>
 
       <div>
         <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-400">Correo</label>
-        <input type="email" placeholder="tucorreo@ejemplo.com" class="input-gamer w-full" />
+        <input
+          type="email"
+          placeholder="tucorreo@ejemplo.com"
+          class="input-gamer w-full"
+          [value]="email()"
+          (input)="email.set($any($event.target).value)"
+        />
       </div>
 
       <div>
         <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-400">Contraseña</label>
-        <input type="password" placeholder="••••••••" class="input-gamer w-full" />
+        <input
+          type="password"
+          placeholder="••••••••"
+          class="input-gamer w-full"
+          [value]="password()"
+          (input)="password.set($any($event.target).value)"
+        />
       </div>
 
-      <button type="submit" class="btn-neon w-full">Crear cuenta</button>
+      <button type="submit" class="btn-neon w-full" [disabled]="loading()">
+        {{ loading() ? 'Creando...' : 'Crear cuenta' }}
+      </button>
     </form>
 
     <p class="mt-6 text-center text-sm text-slate-400">

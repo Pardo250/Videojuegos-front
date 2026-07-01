@@ -22,8 +22,15 @@
     </ul>
 
     <div class="hidden items-center gap-3 md:flex">
-      <a routerLink="/login" class="btn-outline !px-4 !py-2 !text-xs">Iniciar sesión</a>
-      <a routerLink="/register" class="btn-neon !px-4 !py-2 !text-xs">Registrarse</a>
+      @if (isAuthenticated()) {
+        <a [routerLink]="['/perfil', username()]" class="text-sm font-semibold text-slate-300 hover:text-neon-cyan">
+          &#64;{{ username() }}
+        </a>
+        <button type="button" (click)="logout()" class="btn-outline !px-4 !py-2 !text-xs">Salir</button>
+      } @else {
+        <a routerLink="/login" class="btn-outline !px-4 !py-2 !text-xs">Iniciar sesión</a>
+        <a routerLink="/register" class="btn-neon !px-4 !py-2 !text-xs">Registrarse</a>
+      }
     </div>
 
     <button
@@ -53,8 +60,18 @@
         </li>
       }
       <li class="flex gap-2 pt-2">
-        <a routerLink="/login" class="btn-outline flex-1 text-center !px-4 !py-2 !text-xs">Entrar</a>
-        <a routerLink="/register" class="btn-neon flex-1 text-center !px-4 !py-2 !text-xs">Registro</a>
+        @if (isAuthenticated()) {
+          <button
+            type="button"
+            (click)="logout()"
+            class="btn-outline flex-1 text-center !px-4 !py-2 !text-xs"
+          >
+            Salir (&#64;{{ username() }})
+          </button>
+        } @else {
+          <a routerLink="/login" class="btn-outline flex-1 text-center !px-4 !py-2 !text-xs">Entrar</a>
+          <a routerLink="/register" class="btn-neon flex-1 text-center !px-4 !py-2 !text-xs">Registro</a>
+        }
       </li>
     </ul>
   }

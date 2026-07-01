@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 interface NavLink {
   label: string;
@@ -14,7 +15,12 @@ interface NavLink {
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+
   protected readonly menuOpen = signal(false);
+  protected readonly isAuthenticated = this.auth.isAuthenticated;
+  protected readonly username = this.auth.username;
 
   protected readonly links: NavLink[] = [
     { label: 'Dashboard', path: '/dashboard', icon: 'M3 13h4v8H3v-8Zm7-9h4v17h-4V4Zm7 5h4v12h-4V9Z' },
@@ -32,5 +38,11 @@ export class NavbarComponent {
 
   toggleMenu(): void {
     this.menuOpen.update((open) => !open);
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.menuOpen.set(false);
+    this.router.navigateByUrl('/login');
   }
 }
