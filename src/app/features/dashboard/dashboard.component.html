@@ -20,9 +20,20 @@
     <a routerLink="/coleccion" class="text-sm font-semibold text-neon-cyan hover:underline">Ver toda la colección →</a>
   </div>
 
-  <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-    @for (juego of recientes(); track juego.id) {
-      <app-game-card [juego]="juego" />
-    }
-  </div>
+  @if (cargando()) {
+    <p class="text-center text-slate-500">Cargando tu colección...</p>
+  } @else if (errorCarga()) {
+    <p class="text-center text-rose-400">{{ errorCarga() }}</p>
+  } @else if (recientes().length > 0) {
+    <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      @for (juego of recientes(); track juego.id) {
+        <app-game-card [juego]="juego" />
+      }
+    </div>
+  } @else {
+    <p class="text-center text-slate-500">
+      Todavía no tienes juegos en tu colección.
+      <a routerLink="/buscar" class="font-semibold text-neon-cyan hover:underline">Busca uno para empezar →</a>
+    </p>
+  }
 </section>

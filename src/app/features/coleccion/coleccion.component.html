@@ -29,7 +29,11 @@
   </select>
 </section>
 
-@if (resultado().length > 0) {
+@if (cargando()) {
+  <p class="mt-16 text-center text-slate-500">Cargando tu colección...</p>
+} @else if (errorCarga()) {
+  <p class="mt-16 text-center text-rose-400">{{ errorCarga() }}</p>
+} @else if (resultado().length > 0) {
   <section class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
     @for (juego of resultado(); track juego.id) {
       <app-game-card [juego]="juego" />

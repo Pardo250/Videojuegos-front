@@ -1,7 +1,9 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { GameCardComponent } from '../../shared/ui/game-card/game-card.component';
-import { MOCK_COLECCION } from '../../shared/data/mock-juegos';
-import { ESTADO_LABEL, EstadoJuego } from '../../shared/models/juego-coleccion.model';
+import { ColeccionService } from '../../core/services/coleccion.service';
+import { mapJuegoColeccionResponse } from '../../shared/models/coleccion.mapper';
+import { ESTADO_LABEL, EstadoJuego, JuegoColeccion } from '../../shared/models/juego-coleccion.model';
 
 type Filtro = EstadoJuego | 'todos';
 type Orden = 'reciente' | 'rating' | 'horas' | 'titulo';
@@ -12,8 +14,13 @@ type Orden = 'reciente' | 'rating' | 'horas' | 'titulo';
   templateUrl: './coleccion.component.html',
   styleUrl: './coleccion.component.css',
 })
-export class ColeccionComponent {
-  private readonly coleccion = MOCK_COLECCION;
+export class ColeccionComponent implements OnInit {
+  private readonly coleccionService = inject(ColeccionService);
+
+  private readonly coleccion = signal<JuegoColeccion[]>([]);
+
+  protected readonly cargando = signal(true);
+  protected readonly errorCarga = signal('');
 
   protected readonly estadoLabel = ESTADO_LABEL;
   protected readonly filtros: Filtro[] = ['todos', 'jugando', 'completado', 'pendiente', 'wishlist', 'abandonado'];
@@ -23,7 +30,7 @@ export class ColeccionComponent {
   protected readonly resultado = computed(() => {
     const filtro = this.filtroActivo();
     const filtrados =
-      filtro === 'todos' ? [...this.coleccion] : this.coleccion.filter((j) => j.estado === filtro);
+      filtro === 'todos' ? [...this.coleccion()] : this.coleccion().filter((j) => j.estado === filtro);
 
     switch (this.orden()) {
       case 'rating':
@@ -38,6 +45,22 @@ export class ColeccionComponent {
         );
     }
   });
+
+  ngOnInit(): void {
+    this.coleccionService.listar().subscribe({
+      next: (respuesta) => {
+        this.coleccion.set(respuesta.map(mapJuegoColeccionResponse));
+        this.cargando.set(false);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Error al cargar la colección (GET /api/coleccion):', err);
+        this.errorCarga.set(
+          `No se pudo cargar tu colección (${err.status || 'sin conexión'}): ${err.error?.mensaje ?? err.message}`,
+        );
+        this.cargando.set(false);
+      },
+    });
+  }
 
   setFiltro(filtro: Filtro): void {
     this.filtroActivo.set(filtro);

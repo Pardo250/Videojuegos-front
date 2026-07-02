@@ -17,36 +17,54 @@
   />
 </div>
 
-<section class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-  @for (juego of resultados(); track juego.id) {
-    <div class="game-card flex gap-4 p-4">
-      <img [src]="juego.portada" [alt]="juego.titulo" class="h-28 w-20 shrink-0 rounded-md object-cover" />
+<p class="mt-8 font-sans text-xs font-semibold uppercase tracking-widest text-slate-500">
+  {{ query().trim() ? 'Resultados para "' + query().trim() + '"' : 'Juegos populares' }}
+</p>
 
-      <div class="flex min-w-0 flex-1 flex-col justify-between">
-        <div>
-          <h3 class="truncate font-display text-sm font-bold text-white">{{ juego.titulo }}</h3>
-          <p class="text-xs text-slate-400">{{ juego.genero }} · {{ juego.fechaLanzamiento | date: 'yyyy' }}</p>
-          <div class="mt-1 flex flex-wrap gap-1">
-            @for (plataforma of juego.plataformas; track plataforma) {
-              <span class="rounded border border-white/10 bg-white/5 px-1.5 py-0.5 text-[10px] uppercase text-slate-400">
-                {{ plataforma }}
-              </span>
-            }
+<section class="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  @if (cargando()) {
+    <p class="col-span-full text-center text-slate-500">Buscando...</p>
+  } @else if (errorBusqueda()) {
+    <p class="col-span-full text-center text-rose-400">{{ errorBusqueda() }}</p>
+  } @else {
+    @for (juego of resultados(); track juego.rawgId) {
+      <div class="game-card flex gap-4 p-4">
+        <img [src]="juego.imagenUrl" [alt]="juego.nombre" class="h-28 w-20 shrink-0 rounded-md object-cover" />
+
+        <div class="flex min-w-0 flex-1 flex-col justify-between">
+          <div>
+            <h3 class="truncate font-display text-sm font-bold text-white">{{ juego.nombre }}</h3>
+            <p class="text-xs text-slate-400">
+              {{ juego.generos.length ? juego.generos[0] : 'Sin género' }} · {{ juego.fechaLanzamiento | date: 'yyyy' }}
+            </p>
+            <div class="mt-1 flex flex-wrap gap-1">
+              @for (plataforma of juego.plataformas; track plataforma) {
+                <span class="rounded border border-white/10 bg-white/5 px-1.5 py-0.5 text-[10px] uppercase text-slate-400">
+                  {{ plataforma }}
+                </span>
+              }
+            </div>
           </div>
-        </div>
 
-        <button
-          type="button"
-          (click)="agregar(juego.id)"
-          [disabled]="agregados().has(juego.id)"
-          class="mt-2 self-start text-xs font-bold uppercase tracking-wide transition-colors"
-          [class]="agregados().has(juego.id) ? 'text-neon-green' : 'text-neon-cyan hover:text-white'"
-        >
-          {{ agregados().has(juego.id) ? '✓ Añadido' : '+ Añadir a mi colección' }}
-        </button>
+          <button
+            type="button"
+            (click)="agregar(juego)"
+            [disabled]="agregados().has(juego.rawgId) || agregando().has(juego.rawgId)"
+            class="mt-2 self-start text-xs font-bold uppercase tracking-wide transition-colors"
+            [class]="agregados().has(juego.rawgId) ? 'text-neon-green' : 'text-neon-cyan hover:text-white'"
+          >
+            {{
+              agregados().has(juego.rawgId)
+                ? '✓ Añadido'
+                : agregando().has(juego.rawgId)
+                  ? 'Añadiendo...'
+                  : '+ Añadir a mi colección'
+            }}
+          </button>
+        </div>
       </div>
-    </div>
-  } @empty {
-    <p class="col-span-full text-center text-slate-500">No se encontraron juegos para "{{ query() }}".</p>
+    } @empty {
+      <p class="col-span-full text-center text-slate-500">No se encontraron juegos para "{{ query() }}".</p>
+    }
   }
 </section>

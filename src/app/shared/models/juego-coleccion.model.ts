@@ -2,6 +2,7 @@ export type EstadoJuego = 'jugando' | 'completado' | 'abandonado' | 'pendiente' 
 
 export interface JuegoColeccion {
   id: string;
+  rawgId?: number;
   titulo: string;
   portada: string;
   genero: string;
@@ -10,6 +11,8 @@ export interface JuegoColeccion {
   horasJugadas: number;
   rating: number;
   fechaLanzamiento: string;
+  resena?: string;
+  fechaAgregado?: string;
 }
 
 export const ESTADO_LABEL: Record<EstadoJuego, string> = {
